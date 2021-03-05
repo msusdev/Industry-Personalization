@@ -47,7 +47,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 Duration: 10 minutes
 
-In this guide, you will provision the mock environment and data for the Microsoft Industry Based Challenge "Omni Channel Optimization"
+In this guide, you will provision the mock environment and data for the Microsoft Industry Based Challenge "Personalizations"
 
 ### Prerequisites
 

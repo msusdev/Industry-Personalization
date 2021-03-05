@@ -103,6 +103,12 @@ _High-level architecture_
 
 ## Challenge 1: Build the architecture for collecting and ingesting (extract) data
 
+
+>**Note**: Complete the Before the challenge setup prior to proceeding to the challenge tasks below. Provide this link to participants to access the setup instructions.
+   
+   <https://github.com/msusdev/Industry-Personalization/blob/main/Challenge%20Labs/BeforeTheChallenge/BeforeHOL.md>
+   
+
 _Data ingest_
 
 1. What are your recommended options for ingesting payment transaction events and customer browsing and shopping data as they occur in a scalable way that can be easily processed?
