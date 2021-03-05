@@ -5,7 +5,7 @@ Microsoft Industry Based Challenges - Personalizations
 </div>
 
 <div class="MCWHeader2">
-Before the Hands-on lab setup guide
+Before the Challenge lab setup guide
 </div>
 
 <div class="MCWHeader3">
@@ -26,7 +26,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- TOC -->
 
-- [Personalization before the hands-on lab setup guide](#personalization-before-the-hands-on-lab-setup-guide)
+- [Personalization before the challenge lab setup guide](#personalization-before-the-challenge-lab-setup-guide)
   - [Requirements](#requirements)
   - [Before the hands-on lab](#before-the-hands-on-lab)
     - [Prerequisites](#prerequisites)
@@ -37,7 +37,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 <!-- /TOC -->
 
-# Personalization before the hands-on lab setup guide
+# Personalization before the challenge lab setup guide
 
 ## Requirements
 
@@ -47,7 +47,7 @@ Microsoft and the trademarks listed at <https://www.microsoft.com/en-us/legal/in
 
 Duration: 10 minutes
 
-In this guide, you will provision the mock environment and data for the Microsoft Industry Based Challenge "Omni Channel Optimization"
+In this guide, you will provision the mock environment and data for the Microsoft Industry Based Challenge "Personalizations"
 
 ### Prerequisites
 

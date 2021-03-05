@@ -127,12 +127,12 @@ The current solution does get data into a number of databases, but the data is i
 
 In order to begin to work with the data from the various web app databases, you will be required to create a baseline environment with Azure Data Factory for data movement and processing. You will create a Data Factory service, and then install the Data Management Gateway which is the agent that facilitates data movement from multiple databases to Microsoft Azure.
 
-   >**Note**: Complete the Before HOL setup prior to proceeding to the challenge tasks below. Provide this link to participants to access the setup instructions.
-   ```bash  
-    https://TODO-needtolinkwithpublicrepo
-   ``` 
 
 ## Create an Azure Data Lake Storage account and Azure Synapse Analytics service
+
+   >**Note**: Complete the Before HOL setup prior to proceeding to the challenge tasks below. Provide this link to participants to access the setup instructions.
+
+<https://github.com/msusdev/Industry-Personalization/blob/main/Hands-on%20Labs/BeforeTheHOL/BeforeHOL.md>
 
 Before you can connect datasources, you will need to create an Azure Data Lake storage account and the Azure Synapse Analytics service.
 
@@ -492,7 +492,7 @@ connectpowerbi
 
    ![](media/publishworkspace.png 'Screenshot')   
 
-### Task 3: Create a Power BI account
+### Task 3: Download Power BI 
 
 1. Download Power BI Desktop from <https://powerbi.microsoft.com/en-us/desktop/>.
 
@@ -801,6 +801,7 @@ In this scenario we want to see the how digital marketing campaigns effected onl
       ![](media/impressionchart.png)
 
 Final result
+
     ![](media/impressionspersonal.png)
 
 ### Location and demographic
@@ -872,22 +873,281 @@ Final result
 16. Drag lat and long to the corresponding fields in the Visual
 
     ![](media/latlon.png)
+    
+17. Also add State from the same table. Then add in price from the olist_order_items_dataset
 
-17. End Result
+    ![](media/mapprice.png)
 
-      ![](media/finalmap.png)
+18. End Result
 
-18. Add a slicer by clicking on the Slicer visualization
+    
+    ![](media/addmap.png)
+
+19. Add a slicer by clicking on the Slicer visualization
 
       ![](media/slicer.png)
 
-19. Use the State field as the Slicer field
+20. Use the State field as the Slicer field
 
       ![](media/slicerfield.png)
 
-20. Final report layout
+21. Final report layout
 
-      ![](media/finalreport.png)
+    ![](media/finalmaplayout.png)
+      
+### Product feedback from social media (Not real-time currently - but using Text classification)
+
+Select get data from Text/CSV in PowerBI
+
+![](media/weblogdata.png)
+
+Choose sampleproductdata and click Open.Then click Load
+
+![](media/sampleproductdata.png)
+
+Click on Transform data
+
+![](media/transformdata2.png)
+
+Highlight the reviews.text and reviews.title
+
+![](media/highlighttomerge.png)
+
+Right click on one of the highlighted columns and choose Merge columns
+
+![](media/mergecoluns.png)
+
+Choose the separator as Tab and the leave the new column name as Merge. Then click OK
+
+![](media/merged1.png)
+
+Visit https://portal.azure.com 
+
+```
+https://portal.azure.com
+```
+
+Click on New resource and search for Text Analytics
+
+![](media/textanalytics.png)
+
+Click on Create
+
+![](media/createtextanalytics.png)
+
+Choose the msibc_omnichannel Resource group previously used. The choose the same Region you have been using to store the data. Then choose a unique name. Finally set the price tier at S1. Then click Review + create
+
+![](media/textanalyticsCreate.png)
+
+Then click the Create button
+
+![](media/cretebutton.png)
+
+Then open the Resource and select the Keys and Endpoint tab
+
+![](media/keysandendpoint.png)
+
+Click on New Source and choose Blank Query
+
+![](media/blankquery.png)
+
+Double click on Query1 to rename it to KeyPhrases
+
+![](media/keyphrases.gif)
+
+Click on Advanced Editor
+
+![](media/advancededitor.png)
+
+Highlight and replace with the following text
+```text
+// Returns key phrases from the text in a comma-separated list
+(text) => let
+    apikey      = "YOUR_API_KEY_HERE",
+    endpoint    = "https://<your-custom-subdomain>.cognitiveservices.azure.com/text/analytics" & "/v3.0/keyPhrases",
+    jsontext    = Text.FromBinary(Json.FromValue(Text.Start(Text.Trim(text), 5000))),
+    jsonbody    = "{ documents: [ { language: ""en"", id: ""0"", text: " & jsontext & " } ] }",
+    bytesbody   = Text.ToBinary(jsonbody),
+    headers     = [#"Ocp-Apim-Subscription-Key" = apikey],
+    bytesresp   = Web.Contents(endpoint, [Headers=headers, Content=bytesbody]),
+    jsonresp    = Json.Document(bytesresp),
+    keyphrases  = Text.Lower(Text.Combine(jsonresp[documents]{0}[keyPhrases], ", "))
+in  keyphrases
+```
+Return to the Azure portal and copy one of the keys and the subdomain created
+
+![](media/copykeys.png)
+
+Paste them in the following sections in the next text
+
+![](media/paste.png)
+
+Select the sampleproductdata again then click Add column and select the Invoke Custom Function
+
+![](media/customfunc1.png)
+
+In the Invoke Custom Function panel set the New Column name to keyphrases. Then choose the Function query keyPhrases previously created. Then in the dropdown choose Merged. Finally click OK
+
+![](media/invokecustomfunc.png)
+
+Click the continue button on the yellow bar. If it requests credentials choose Anonymous because we are using the access key.
+
+![](media/continue.png)
+
+Click the checkbox to ignore Privacy Levels and click Save
+
+![](media/privacylevels.png)
+
+Finally click on the Home tab and click Close & Apply
+
+![](media/closenapply2.png)
+
+Ignore any errors
+
+![](media/ignoreerrors.png)
+
+Click on the ellipses under Visualizations and choose Get more visuals
+
+![](media/getmoreviz.png)
+
+Search for the word cloud and click Add for the Word Cloud Visual
+
+![](media/wordcloud1.png)
+
+Click the Word Cloud Visualization to add it to the screen
+
+![](media/wordcloud2.png)
+
+Drag keyphrases to the Category field
+
+![](media/categoryfield1.png)
+
+Click on the Format icon for the Word Cloud
+
+![](media/formatwordcloud.png)
+
+Expand the Stop Words section and paste in the following. Disable the Title and also disable the Rotate Text option.
+
+```text
+of hello loggin cash id new thats
+```
+
+Final result
+
+![](media/wordcloud3.png)
+
+### Add Sentiment Analysis to the reviews
+
+Right click on sampleproductdata and choose Edit query
+
+![](media/editquery.png)
+
+Create another Blank Query 
+
+![](media/blankquery.png)
+
+Rename it sentiment
+
+![](media/sentiment.png)
+
+Click on Advanced Editor
+
+![](media/advancededitor.png)
+
+Highlight and replace with the following text
+```text
+// Returns the sentiment score of the text, from 0.0 (least favorable) to 1.0 (most favorable)
+(text) => let
+    apikey      = "YOUR_API_KEY_HERE",
+    endpoint    = "https://<your-custom-subdomain>.cognitiveservices.azure.com" & "/text/analytics/v3.0/sentiment",
+    jsontext    = Text.FromBinary(Json.FromValue(Text.Start(Text.Trim(text), 5000))),
+    jsonbody    = "{ documents: [ { language: ""en"", id: ""0"", text: " & jsontext & " } ] }",
+    bytesbody   = Text.ToBinary(jsonbody),
+    headers     = [#"Ocp-Apim-Subscription-Key" = apikey],
+    bytesresp   = Web.Contents(endpoint, [Headers=headers, Content=bytesbody]),
+    jsonresp    = Json.Document(bytesresp),
+    sentiment   = jsonresp[documents]{0}[confidenceScores]
+in  sentiment
+```
+
+Visit https://portal.azure.com 
+
+```
+https://portal.azure.com
+```
+
+Click on New resource and search for Sentiment Analysis
+
+![](media/sentimentanlysis.png)
+
+Click on Create
+
+![](media/create-sentiment.png)
+
+Return to the Azure portal and copy one of the keys and the subdomain created
+
+![](media/copykeys.png)
+
+Paste them in the following sections in the next text
+
+![](media/pastesentiment.png)
+
+Select the sampleproductdata again then click Add column and select the Invoke Custom Function
+
+![](media/customfunc1.png)
+
+In the Invoke Custom Function panel set the New Column name to Sentiment. Then choose the Function query sentiment previously created. Then in the dropdown choose Merged. Finally click OK
+
+![](media/sentimentfunc.png)
+
+In the newly created Sentiment column we need to split the cells. Click on the opposing arrows
+
+![](media/splitsentiment.png)
+
+Uncheck neutral and click OK
+
+![](media/neutral.png)
+
+Finally click on the Home tab and click Close & Apply
+
+![](media/closenapply2.png)
+
+It might take a while to process the sentiment values.
+
+Ignore any errors
+
+![](media/ignoreerrors.png)
+
+Add a slicer to the canvas
+
+![](media/slicer1.png)
+
+Drag the Title from the Products table to Field column
+
+![](media/productstable.png)
+
+Add a KPI Visualization
+
+![](media/kpi.png)
+
+Set the Indicator to Title from the Products Table. Set the Trend Axis to Sentiment.negative and set the Target goals to Sentiment.positive
+
+![](media/set-sentiment.png)
+
+### Add Gender to Persona
+
+Add a Stacked column chart to the report
+
+![](media/stackedcolumnchart2.png)
+
+Set the Axis to gender from the conversion_data. Values to Gender
+
+![](media/gendersetup.png)
+
+Final gender study
+
+![](media/finalgender.png)
+
 
 ### Publish
 
